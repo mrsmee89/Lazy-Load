@@ -1,0 +1,40 @@
+
+body {
+	padding:  50px;
+}
+.animationBox {
+	font-family: "lucida grande";
+	color: white;
+	width: 200px;
+	height: 100px;
+	background: -webkit-linear-gradient(#517e9e 0%, #247d93 100%);
+	font-size: 21px;
+	line-height: 100px;
+	text-align: center;
+	letter-spacing: 1px;
+	text-shadow: 0px 1px 0px rgba(0,0,0,0.75);
+	border-radius: 10px;
+	float:  left;
+	margin: 0 16px;
+	box-shadow: 0 1px 3px rgba(00,00,00, .5);
+	cursor: default;
+	position: relative;
+	top:  0;
+	left: 0;
+	-webkit-transform-style: preserve-3d;
+	-webkit-backface-visibility: hidden;
+	-webkit-transition: all .2s ease-in-out;
+	-webkit-transform: scale(.7,.7) rotate(360deg);
+}
+@-webkit-keyframes skewing{
+	from {
+		-webkit-transform: scale(1,1) rotate(-360deg);
+	}
+	to {
+		-webkit-transform: scale(.7,.7) rotate(360deg);
+	}
+}
+.animationBox:hover {
+	-webkit-transform: scale(1.5,1.5);
+	z-index: 100;
+}
