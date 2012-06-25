@@ -2,17 +2,77 @@
 	<head>
 		<title>CSS3 Animations</title>
 		<link rel="stylesheet" href="animations.css" type="text/css" media="screen" charset="utf-8">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js" type="text/javascript"></script>
+		<script src="jquery.js" type="text/javascript"></script>
 	</head>
 	<body>
-		<div class="animationBox">Readable Text</div>
+		<div id="counter"></div>
+		<div id="storeBoxesContainer"></div>
 		<div style="clear: both;"></div>
 		<script type="text/javascript">
-			var cloned = $('.animationBox');
-			cloned.remove();
-			for (var i = 0; i < 45; i++) {
-				cloned.clone().appendTo('body')
+			var boxData = {
+				startFrom : 0,
+				howMany: 100,
+				stopAt : this.startFrom + this.howMany,
+				storeBoxesContainer: $('#storeBoxesContainer'),
+				currLoading: false,
+				saveBoxes: [],
+				amtOfBoxes: 500,
+				initialLoad : 50,
+				isInitialLoad: true
+				
 			}
+			for (var i = 0; i < boxData.amtOfBoxes; i++) {
+				(function(){
+					return (function(j){
+						setTimeout(function() {
+							boxData.saveBoxes.push({
+								node : '<div class="animationBox">Readable Text</div>',
+								index : j,
+								visible: false
+							});
+							if(j == boxData.initialLoad) callback();
+						}, 1);
+					})(i)
+				})();
+			}
+			function callback() {
+				setTimeout(function(){
+					appendNodes();
+					$('body').css('backgroundImage' , 'none');
+				}, 100)
+			}
+			function appendNodes() {
+				if(boxData.amtOfBoxes == 0) return;
+				var localLoadAmt = boxData.howMany;
+				if(boxData.howMany != boxData.initialLoad && boxData.isInitialLoad) localLoadAmt = boxData.initialLoad;
+				boxData.stopAt = (boxData.startFrom + localLoadAmt);
+				$.each(boxData.saveBoxes,function(i){
+					if(i >= localLoadAmt) return;
+					boxData.amtOfBoxes--;
+					boxData.storeBoxesContainer.append(boxData.saveBoxes[i].node);
+				});
+				displayMoreImages();
+				if(boxData.isInitialLoad) boxData.isInitialLoad = false;
+			}
+			function displayMoreImages() {
+				var animationBoxes = $('.animationBox');
+				(function displayImages() {
+					boxData.saveBoxes[boxData.startFrom++].visible = true;
+					if( boxData.startFrom >= boxData.stopAt) {boxData.currLoading = false;return false;}
+					$('#counter').html(boxData.startFrom);
+				    animationBoxes.eq(boxData.startFrom).fadeIn(1, displayImages);
+				 })();
+			}
+			$(window).scroll(function(e){
+				if(boxData.amtOfBoxes == 0) return;
+				var positionTop = $(document).height() - 150;
+				var scrollTop = $(window).scrollTop() + $(window).height();
+				if(scrollTop > positionTop) {
+					if(boxData.currLoading) return;
+					boxData.currLoading = true;
+					appendNodes();
+				}
+			});
 		</script>
 	</body>
 </html>
